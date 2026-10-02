@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h3>Search Giphy Below</h3>
+      <search>
+        <form>
+          <input type="text" name="" id="" />
+          <button id="submit">Search</button>
+        </form>
+      </search>
+
+      <div id="giphyDiv">
+        <button id="displayGiphy" disabled>Display</button>
+        <img src="" />
+      </div>
+    </div>
+
+    <script>
+      const searchForGiphy = document.querySelector("#submit");
+      const displayGiphy = document.getElementById("displayGiphy");
+      const input = document.querySelector("input");
+      let fetchGif;
+
+      searchForGiphy.addEventListener("click", (e) => {
+        let userInput = input.value;
+        input.value = "";
+        fetchGif = fetch(
+          `https://api.giphy.com/v1/gifs/translate?api_key=grksfaAoRjQCBWIQtgyi4spveGCW5MBY&s=${userInput}&rating=g`
+        );
+        displayGiphy.disabled = false;
+        e.preventDefault();
+      });
+
+      displayGiphy.addEventListener("click", () => {
+        document.body.style.backgroundColor = "blue";
+        const img = document.querySelector("img");
+
+        fetchGif
+          .then(function (response) {
+            console.log(response);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(function (response) {
+            img.src = "";
+            img.src = response.data.images.original.url;
+          })
+          .catch((error) => {
+            console.error("Error fetching the image:", error);
+          });
+      });
+    </script>
+
+    <style>
+      h3 {
+        text-align: center;
+      }
+
+      form {
+        margin: auto;
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      input {
+        margin: auto;
+      }
+
+      #submit {
+        width: 100px;
+        margin: auto;
+        margin-top: 10px;
+      }
+
+      #displayGiphy {
+        margin-top: 20px;
+      }
+
+      #giphyDiv {
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+        margin: auto;
+        margin-top: 10px;
+      }
+
+      #displayGiphy {
+        width: 100px;
+        margin: auto;
+      }
+
+      img {
+        margin: auto;
+        margin-top: 10px;
+      }
+    </style>
+  </body>
+</html>
