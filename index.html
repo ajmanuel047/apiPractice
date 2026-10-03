@@ -16,7 +16,6 @@
       </search>
 
       <div id="giphyDiv">
-        <button id="displayGiphy" disabled>Display</button>
         <img src="" />
       </div>
     </div>
@@ -25,37 +24,27 @@
       const searchForGiphy = document.querySelector("#submit");
       const displayGiphy = document.getElementById("displayGiphy");
       const input = document.querySelector("input");
-      let fetchGif;
 
       searchForGiphy.addEventListener("click", (e) => {
         let userInput = input.value;
         input.value = "";
-        fetchGif = fetch(
-          `https://api.giphy.com/v1/gifs/translate?api_key=grksfaAoRjQCBWIQtgyi4spveGCW5MBY&s=${userInput}&rating=g`
-        );
-        displayGiphy.disabled = false;
-        e.preventDefault();
-      });
-
-      displayGiphy.addEventListener("click", () => {
-        document.body.style.backgroundColor = "blue";
         const img = document.querySelector("img");
-
-        fetchGif
-          .then(function (response) {
-            console.log(response);
+        async function getApi() {
+          try {
+            const response = await fetch(
+              `https://api.giphy.com/v1/gifs/translate?api_key=grksfaAoRjQCIQtgyi4spveGCW5MBY&s=${userInput}&rating=g`
+            );
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
-          })
-          .then(function (response) {
-            img.src = "";
-            img.src = response.data.images.original.url;
-          })
-          .catch((error) => {
+            const getData = await response.json();
+            img.src = getData.data.images.original.url;
+          } catch (error) {
             console.error("Error fetching the image:", error);
-          });
+          }
+        }
+        getApi();
+        e.preventDefault();
       });
     </script>
 
